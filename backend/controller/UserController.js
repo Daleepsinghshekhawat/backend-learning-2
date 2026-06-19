@@ -246,13 +246,11 @@ exports.restoreUser = async (req, res) => {
   }
 };
 
-
 // password froget
 
 exports.forgotPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
-
 
     if (!(email && password)) {
       return res.status(400).json({
@@ -268,10 +266,9 @@ exports.forgotPassword = async (req, res) => {
     }
 
     const saltrounds = 10;
-    const salt = bcrypt.genSaltSync(saltrounds)
-    const hashedPassword = bcrypt.hashSync(password,salt);
+    const salt = bcrypt.genSaltSync(saltrounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
-   
     user.password = hashedPassword;
     await user.save();
 
@@ -288,58 +285,48 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-
-
 // reset password
 
 exports.resetPassword = async (req, res) => {
   try {
     const { email, oldPassword, newPassword } = req.body;
 
-    // Validation
-    if (!email || !oldPassword || !newPassword) {
+    if (!(email && oldPassword && newPassword)) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "all field are required",
       });
     }
 
-    // Check user exists
     const user = await SignupModel.findOne({
       email,
     });
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "user not found",
       });
     }
 
-    // Check old password
     const match = await bcrypt.compare(oldPassword, user.password);
 
     if (!match) {
       return res.status(401).json({
-        message: "Old password is incorrect",
+        message: "old password is wrong",
       });
     }
 
-    // Prevent same password reuse
     const samePassword = await bcrypt.compare(newPassword, user.password);
 
     if (samePassword) {
       return res.status(400).json({
-        message: "New password cannot be same as old password",
+        message: "new password cannot be same as old password",
       });
     }
 
-    // // Hash new password
-    // const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const saltrounds = 10;
+    const salt = bcrypt.genSaltSync(saltrounds);
+    const hashedPassword = bcrypt.hashSync(newPassword, salt);
 
-     const saltrounds = 10;
-     const salt = bcrypt.genSaltSync(saltrounds);
-     const hashedPassword = bcrypt.hashSync(newpassword, salt);
-
-    // Update password
     user.password = hashedPassword;
 
     await user.save();
@@ -352,7 +339,9 @@ exports.resetPassword = async (req, res) => {
 
     res.status(500).json({
       message: "Server Error",
-      error: error.message,
     });
   }
 };
+
+
+

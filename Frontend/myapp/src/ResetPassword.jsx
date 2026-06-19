@@ -22,7 +22,6 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check new password and confirm password
     if (
       formData.newPassword !==
       formData.confirmPassword
