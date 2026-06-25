@@ -49,4 +49,8 @@ router.patch("/users/forgotpassword", usercontroller.forgotPassword);
 
 router.patch("/users/resetpassword", usercontroller.resetPassword);
 
+
+
+router.post('/task',auth,usercontroller.alltask)
+
 module.exports = router;

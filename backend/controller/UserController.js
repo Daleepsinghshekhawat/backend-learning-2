@@ -1,5 +1,6 @@
 const UserModel = require("../model/userModel.js");
 const SignupModel = require("../model/signupModel");
+const taskmodel = require('../model/taskModel');
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -344,4 +345,5 @@ exports.resetPassword = async (req, res) => {
 };
 
 
+exports.addTask 
 
